@@ -32,7 +32,8 @@ from the documentation. However, a simplified overview for use on Windows machin
 ### Starting the Odoo Server
 
 1. Open a terminal in the root of the repo.
-2. Run the command `python odoo-bin -r dbuser -w dbpassword --addons-path=addons -d mydb`, replacing the following with your info:
+2. Run the command `python odoo-bin -c run.config` to use the info in the config file.
+**Alternatively,** run the command `python odoo-bin -r dbuser -w dbpassword --addons-path=addons -d mydb`, replacing the following with your info:
     - `dbuser` is the username you created for Odoo in *Step 2.4* of *Setting Up the Environment*. In my case, it's "odoo".
     - `dbpassword` is the password you created for Odoo in *Step 2.5* of *Setting Up the Environment*. In my case, it's "odoo".
     - `mydb` is the name of the PostgreSQL database you'd like to connect to. I would set this to `nms`, or `nms-test`. If you attempt to connect to a database that does not yet exist, Odoo will initialize it for you.
