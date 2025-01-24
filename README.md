@@ -42,17 +42,33 @@ from the documentation. However, a simplified overview for use on Windows machin
 
 This should be enough to get an instance of Odoo up and running.
 
-## Odoo Server / Database Structure
+## Installing the Custom Modules
 
-From what I've gathered, an implementation of Odoo has two main components: the Odoo source code, and a PostgreSQL database.
+**All** custom additions / modifications to Odoo will be added in the `custom_addons` directory. This will make it easy to update to new versions of Odoo, and this was the workflow that Odoo themselves recommended.
 
-### Odoo Source Code
+Within the `custom_addons` directory, each top-level folder is its own **module**. **Modules** can either be **apps**, or... **not apps**.
 
-The Odoo source code is what is contained within this repository. It has **server** code that provides HTML files and views to the client. Odoo is basically an interface to interact with a locally hosted PostgreSQL database. **No database data (rows) are stored within this repo. However, table / model definitions and fields ARE defined here.**
+To install custom apps, follow these steps:
+1. Open an instance of Odoo. 
+2. Navigate to the Apps page via the menu in the top-left. 
+3. Click on ```Update Apps List``` in the page header. This forces Odoo to scan the ```addons``` and ```custom_addons``` directories for any changes.
+4. Now, in the search bar, remove the ```apps``` filter. This should increase the total number of results from 60 or so to 600+.
+5. Search for the name of the module you'd like to install.
+6. If this module has not been installed before, click "Activate".
+7. If this module has already been installed, click on the three dots and select "Upgrade". Whenever you make changes to an app, you need to manually update the app in Odoo by doing this.
+8. After a brief amount of time, you should be redirected to the ```Discuss``` page. The changes from the newly installed module should now be in effect.
 
-### PostgreSQL Database
+## Custom Module Structure
+This section will be updated as I learn more about Odoo Development. From what I've learned so far,
+1. Each **module** has a ```__manifest__.py``` file that stores the **module**'s metadata. This includes the module's name, author, version number, and dependencies.
+    - The ```depends``` key is pretty important. It's an array of other **modules** that the current **module** depends on. 
+2. ```__init__.py``` is another required file, but I'm not exactly sure what it does at this point in time. It probably gets ran once when initially starting an Odoo server, if I had to guess?
+3. The ```models``` directory is *optional*. If your **module** adds fields to existing models, or new models entirely, then those python files should go here.
+4. The ```views``` directory is *optional*. If your **module** modifies existing views, or adds new views entirely, those xml files should go here. You also need to add any xml files to the ```data``` key in ```__manifest__.py```.
 
-This is a database hosted locally on your machine. You need to create an account that Odoo can to use to make changes to the database (see *Step 2* of *Setting Up the Environment*). Odoo will use the table definitions in its source code to modifiy the database structure, and the actual data will be kept within a directory on your local device (default is `C:\Program Files\PostgreSQL\*Version#*\data` I think). That data **will NOT be tracked within this repo**.
+Now that we have one module already made, we should just copy it as a starting point for making future modules.
+
+
 
 ----
 [![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
