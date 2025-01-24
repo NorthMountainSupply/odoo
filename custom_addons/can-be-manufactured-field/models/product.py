@@ -4,7 +4,13 @@ from odoo import api, fields, models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    can_be_manufactured = fields.Float(string="Can Be Manufactured", compute="_compute_can_be_manufactured")
+    can_be_manufactured = fields.Float(
+        string="Can Be Manufactured",
+        compute="_compute_can_be_manufactured",
+        help="The maximum amount of this product that can be made given the current inventory.",
+        store=True,
+        recursive=True,
+    )
 
     # Compute method for the Can Be Manufactured field
     @api.depends("bom_ids", "bom_ids.bom_line_ids", "bom_ids.bom_line_ids.product_id.can_be_manufactured", "qty_available")
@@ -38,7 +44,13 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    can_be_manufactured = fields.Float(string="Can Be Manufactured", compute="_compute_can_be_manufactured")
+    can_be_manufactured = fields.Float(
+        string="Can Be Manufactured",
+        compute="_compute_can_be_manufactured",
+        help="The maximum amount of this product that can be made given the current inventory.",
+        store=True,
+        recursive=True,
+    )
 
     @api.depends("product_variant_ids.can_be_manufactured")
     def _compute_can_be_manufactured(self):
