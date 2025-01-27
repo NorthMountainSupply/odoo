@@ -1,5 +1,5 @@
 {
-    "name": "Can Be Manufactured Field",
+    "name": "Product Manufacturable Field",
     "version": "1.0",
     "category": "Inventory",
     "summary": "Adds a custom field to the product.product and product.template models.",
