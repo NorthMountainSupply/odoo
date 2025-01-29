@@ -50,3 +50,13 @@ package.json
 /man/
 /share/
 /src/
+custom_addons/asin_field/__init__.py
+custom_addons/asin_field/__manifest__.py
+custom_addons/asin_field/models/__init__.py
+custom_addons/asin_field/models/product.py
+custom_addons/asin_field/views/product_views.xml
+custom_addons/manufacturable_field/__init__.py
+custom_addons/manufacturable_field/__manifest__.py
+custom_addons/manufacturable_field/models/__init__.py
+custom_addons/manufacturable_field/models/product.py
+custom_addons/manufacturable_field/views/product_views.xml
