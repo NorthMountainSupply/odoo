@@ -2,9 +2,9 @@
     "name": "Bulk Order Processing",
     "version": "1.0",
     "category": "Sales",
-    "summary": "Adds a custom field to the product.product and product.template models.",
+    "summary": "App for managing Bulk POs.",
     "author": "Colby Heaton",
-    "depends": ["product", "mrp", "sale_management"],
+    "depends": ["product", "mrp", "sale_management", "asin_field", "manufacturable_field"],
     "data": [
         "views/product_views.xml",
     ],
