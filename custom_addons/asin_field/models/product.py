@@ -1,12 +1,12 @@
 from odoo import fields, models
 
 
-# Add Char field to template model for Amazon ASIN
+# Add Char field to template model for ASIN
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    amazon_asin = fields.Char(
-        string="Amazon ASIN",
+    asin = fields.Char(
+        string="ASIN",
         help="The ASIN associated with this product listing.",
         store=True,
         indexed=True,
@@ -17,8 +17,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    amazon_asin = fields.Char(
-        string="Amazon ASIN",
+    asin = fields.Char(
+        string="ASIN",
         help="The ASIN associated with this product listing.",
-        related="product_tmpl_id.amazon_asin",
+        related="product_tmpl_id.asin",
     )
