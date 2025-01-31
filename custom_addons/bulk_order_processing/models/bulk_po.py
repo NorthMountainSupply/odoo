@@ -51,7 +51,10 @@ class BulkPO(models.Model):
     # Should an alert be displayed on the screen when viewing this PO?
     show_alert = fields.Boolean(default=False, stored=True)
 
-    # The cost of an individual product
+    # Currency field
+    currency_id = fields.Many2one("res.currency", string="Currency", default=lambda self: self.env.ref("base.USD").id)
+
+    # Unit cost of the product in this PO
     unit_cost = fields.Monetary(string="Unit Cost", stored=True)
 
     # The cost of the entire PO line

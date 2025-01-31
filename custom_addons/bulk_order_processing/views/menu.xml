@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
-    <menuitem id="bulk_menu_root" name="Bulk" action="action_bulk_po_lines"/>
-
-    <menuitem id="bulk_po_lines" name="Bulk PO Lines" parent="bulk_menu_root" action="action_bulk_po_lines"/>
-
-
+    <menuitem id="bulk_menu_root"
+              name="Bulk Orders"
+              sequence="32"
+              web_icon="bulk_order_processing,static/description/icon.png" />
+    <menuitem id="bulk_po_lines"
+              name="Bulk PO Lines"
+              parent="bulk_menu_root"
+              action="action_bulk_po_lines" />
 </odoo>

@@ -6,8 +6,9 @@
     "author": "Colby Heaton",
     "depends": ["product", "mrp", "sale_management", "asin_field", "manufacturable_field"],
     "data": [
-        "views/menu.xml",
+        "security/ir.model.access.csv",
         "views/bulk_po.xml",
+        "views/menu.xml",
     ],
     "installable": True,
     "application": True,
