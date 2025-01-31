@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 
 class BulkPO(models.Model):
-    _name = "bulk.po"
+    _name = "bulk.po.line"
     _description = "Bulk Purchase Order"
 
     # 6 Fields Automatically Added to the bulk.po Model by Odoo (all readonly):
