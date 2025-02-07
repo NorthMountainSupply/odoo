@@ -6,6 +6,12 @@ from odoo import api, fields, models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    ignore_in_manufacturable = fields.Boolean(
+        string="Ignore in Manufacturable",
+        help="If checked, this product will not be considered in the manufacturable computation. This should be checked for plastic bags or packing materials, where alternative items can be used.",
+        related="product_tmpl_id.ignore_in_manufacturable",
+    )
+
     manufacturable = fields.Float(
         string="Manufacturable",
         compute="_compute_manufacturable",
@@ -16,7 +22,12 @@ class ProductProduct(models.Model):
 
     # Compute method for the Manufacturable field
     @api.depends(
-        "bom_ids", "bom_ids.bom_line_ids", "bom_ids.bom_line_ids.product_qty", "bom_ids.bom_line_ids.product_id.manufacturable", "qty_available"
+        "ignore_in_manufacturable",
+        "bom_ids",
+        "bom_ids.bom_line_ids",
+        "bom_ids.bom_line_ids.product_qty",
+        "bom_ids.bom_line_ids.product_id.manufacturable",
+        "qty_available",
     )
     def _compute_manufacturable(self) -> None:
         def compute_recursive(product: ProductProduct, visited: Set[int]) -> float:
@@ -24,6 +35,9 @@ class ProductProduct(models.Model):
             if product.id in visited:
                 return product.manufacturable
             visited.add(product.id)
+
+            if product.ignore_in_manufacturable:
+                return 9999
 
             max_qty: float = 0.0
             for bom in product.bom_ids:
@@ -47,6 +61,13 @@ class ProductProduct(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
+
+    ignore_in_manufacturable = fields.Boolean(
+        string="Ignore in Manufacturable",
+        help="If checked, this product will not be considered in the manufacturable computation. This should be checked for plastic bags or packing materials, where alternative items can be used.",
+        store=True,
+        copied=True,
+    )
 
     manufacturable = fields.Float(
         string="Manufacturable",

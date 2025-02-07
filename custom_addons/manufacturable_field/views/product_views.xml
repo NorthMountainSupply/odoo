@@ -9,6 +9,9 @@
             <xpath expr="//field[@name='barcode']" position="after">
                 <field name="manufacturable"/>
             </xpath>
+            <xpath expr="//field[@name='manufacturable']" position="after">
+                <field name="ignore_in_manufacturable"/>
+            </xpath>
         </field>
     </record>
 
