@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class MrpBom(models.Model):
@@ -44,3 +45,19 @@ class MrpBom(models.Model):
                 bom.manufacturable = max_for_this_bom
             finally:
                 bom._computing_manufacturable = False
+
+    # prevent users from making circular BoM dependencies
+    @api.constrains("bom_line_ids")
+    def _check_circular_dependency(self):
+        for bom in self:
+            visited = set()
+            self._check_circular_dependency_recursive(bom, visited)
+
+    def _check_circular_dependency_recursive(self, bom, visited):
+        if bom in visited:
+            raise ValidationError("Circular dependency detected in BoM.")
+        visited.add(bom)
+        for line in bom.bom_line_ids:
+            if line.product_id.bom_ids:
+                for child_bom in line.product_id.bom_ids:
+                    self._check_circular_dependency_recursive(child_bom, visited)
