@@ -56,6 +56,14 @@ class ProductTemplate(models.Model):
         copied=True,
     )
 
+    reserved_for_sales = fields.Float(
+        string="Reserved for Sales",
+        help="The amount of this product that is reserved for currently pending sales orders.",
+        readonly=True,
+        store=True,
+        default=0,
+    )
+
     manufacturable = fields.Float(
         string="Manufacturable",
         compute="_compute_manufacturable",
