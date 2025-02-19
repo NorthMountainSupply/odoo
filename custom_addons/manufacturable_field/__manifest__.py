@@ -7,6 +7,7 @@
     "depends": ["product", "mrp"],
     "data": [
         "views/product_views.xml",
+        "views/bom_views.xml",
     ],
     "installable": True,
     "application": False,

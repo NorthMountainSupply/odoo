@@ -41,7 +41,7 @@ class MrpBom(models.Model):
                     max_for_this_bom = min(max_for_this_bom, component_qty / line.product_qty)
                 if max_for_this_bom == float("inf"):
                     max_for_this_bom = 0
-                bom.manufacturable = max_for_this_bom
+                bom.manufacturable = max_for_this_bom * bom.product_qty
             finally:
                 bom._computing_manufacturable = False
 
