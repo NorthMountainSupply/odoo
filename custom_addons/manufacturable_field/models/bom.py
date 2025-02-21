@@ -11,6 +11,21 @@ class MrpBom(models.Model):
         store=True,
     )
 
+    limiting_product_id = fields.Many2one(
+        "product.product",
+        string="Limiting Product",
+        help="The product that is limiting the manufacturable value of this BoM.",
+        store=True,
+        readonly=True,
+    )
+
+    limiting_product_manufacturable = fields.Float(
+        string="Limiting Product Manufacturable",
+        help="The manufacturable value of the limiting product.",
+        store=True,
+        readonly=True,
+    )
+
     _computing_manufacturable = fields.Boolean(
         string="Computing Manufacturable",
         default=False,
@@ -18,6 +33,7 @@ class MrpBom(models.Model):
     )
 
     @api.depends(
+        "product_qty",
         "bom_line_ids",
         "bom_line_ids.product_qty",
         "bom_line_ids.product_id.manufacturable",
@@ -30,6 +46,8 @@ class MrpBom(models.Model):
             bom._computing_manufacturable = True
             try:
                 max_for_this_bom: float = float("inf")
+                limiting_product = None
+                limiting_product_manufacturable = 0
                 for line in bom.bom_line_ids:
                     component = line.product_id
                     if component.ignore_in_manufacturable:
@@ -37,11 +55,19 @@ class MrpBom(models.Model):
                     component_qty = component.manufacturable
                     if component_qty < line.product_qty:
                         max_for_this_bom = 0
+                        limiting_product = component
+                        limiting_product_manufacturable = component_qty
                         break
-                    max_for_this_bom = min(max_for_this_bom, component_qty / line.product_qty)
+                    ratio = component_qty / line.product_qty
+                    if ratio < max_for_this_bom:
+                        max_for_this_bom = ratio
+                        limiting_product = component
+                        limiting_product_manufacturable = component_qty
                 if max_for_this_bom == float("inf"):
                     max_for_this_bom = 0
                 bom.manufacturable = max_for_this_bom * bom.product_qty
+                bom.limiting_product_id = limiting_product
+                bom.limiting_product_manufacturable = limiting_product_manufacturable
             finally:
                 bom._computing_manufacturable = False
 

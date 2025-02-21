@@ -7,8 +7,13 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_qty']" position="after">
+            <xpath expr="//div[field[@name='product_qty']]" position="after">
                 <field name="manufacturable"/>
+                <label for="limiting_product_manufacturable" string="Limited By"/>
+                <div class="o_row">
+                    <field name="limiting_product_manufacturable"/>
+                    <field name="limiting_product_id"/>
+                </div>
             </xpath>
         </field>
     </record>

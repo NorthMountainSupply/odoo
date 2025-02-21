@@ -18,6 +18,14 @@ class ProductProduct(models.Model):
         recursive=True,
     )
 
+    reserved_for_sales = fields.Float(
+        string="Reserved for Sales",
+        help="The amount of this product that is reserved for currently pending quotations.",
+        readonly=True,
+        store=True,
+        default=0,
+    )
+
     # flag to prevent infinite recursion
     _computing_manufacturable = fields.Boolean(
         string="Computing Manufacturable",
@@ -25,12 +33,7 @@ class ProductProduct(models.Model):
         store=False,
     )
 
-    @api.depends(
-        "ignore_in_manufacturable",
-        "bom_ids",
-        "bom_ids.manufacturable",
-        "qty_available",
-    )
+    @api.depends("ignore_in_manufacturable", "bom_ids", "bom_ids.manufacturable", "qty_available", "free_qty")
     def _compute_manufacturable(self) -> None:
         for product in self:
             if product._computing_manufacturable:
@@ -41,7 +44,7 @@ class ProductProduct(models.Model):
                     product.manufacturable = 9999
                 else:
                     max_bom_qty = max(product.bom_ids.mapped("manufacturable"), default=0)
-                    product.manufacturable = product.qty_available + max_bom_qty
+                    product.manufacturable = product.free_qty + max_bom_qty
             finally:
                 product._computing_manufacturable = False
 
@@ -56,14 +59,6 @@ class ProductTemplate(models.Model):
         copied=True,
     )
 
-    reserved_for_sales = fields.Float(
-        string="Reserved for Sales",
-        help="The amount of this product that is reserved for currently pending sales orders.",
-        readonly=True,
-        store=True,
-        default=0,
-    )
-
     manufacturable = fields.Float(
         string="Manufacturable",
         compute="_compute_manufacturable",
@@ -74,4 +69,4 @@ class ProductTemplate(models.Model):
     @api.depends("product_variant_ids.manufacturable")
     def _compute_manufacturable(self) -> None:
         for template in self:
-            template.manufacturable = max(template.product_variant_ids.mapped("manufacturable"), default=0)
+            template.manufacturable = sum(template.product_variant_ids.mapped("manufacturable"))
